@@ -16,6 +16,13 @@ export enum PizzaTag {
     Spicy = "spicy",
     Calzone = "calzone",
 }
+export type PizzaTagType =
+    | "all"
+    | "meat"
+    | "vegetarian"
+    | "grill"
+    | "spicy"
+    | "calzone";
 
 export interface PizzaModel extends Base {}
 export class PizzaModel extends TimeStamps {
@@ -28,8 +35,8 @@ export class PizzaModel extends TimeStamps {
     @prop()
     title: string;
 
-    @prop({ type: () => [PizzaTag] })
-    tags: PizzaTag[];
+    @prop({ type: () => [String] })
+    tags: PizzaTagType[];
 
     @prop({ type: () => Size })
     size26: {

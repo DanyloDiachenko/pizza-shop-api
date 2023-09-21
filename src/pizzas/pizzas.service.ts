@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { CreatePizzaDto } from "./dto/create-pizza.dto";
 import { PizzaModel, PizzaTag } from "./pizza.model";
 import { ModelType } from "@typegoose/typegoose/lib/types";

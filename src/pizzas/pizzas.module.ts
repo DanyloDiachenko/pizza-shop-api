@@ -1,7 +1,7 @@
 import { Module } from "@nestjs/common";
-import { PizzasController } from "./pizzas.controller";
 import { TypegooseModule } from "nestjs-typegoose";
 import { PizzaModel } from "./pizza.model";
+import { PizzasController } from "./pizzas.controller";
 import { PizzasService } from "./pizzas.service";
 
 @Module({
@@ -11,11 +11,11 @@ import { PizzasService } from "./pizzas.service";
             {
                 typegooseClass: PizzaModel,
                 schemaOptions: {
-                    collection: 'Pizzas'
+                    collection: "Pizzas",
                 },
             },
         ]),
     ],
-    providers: [PizzasService]
+    providers: [PizzasService],
 })
 export class PizzasModule {}
