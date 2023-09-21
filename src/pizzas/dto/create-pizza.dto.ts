@@ -1,5 +1,6 @@
-import { IsNumber, IsString, ValidateNested } from "class-validator";
+import { IsArray, IsNumber, IsString, ValidateNested } from "class-validator";
 import { Type } from "class-transformer";
+import { PizzaTag } from "../pizza.model";
 
 class Size {
     @IsNumber()
@@ -18,6 +19,10 @@ export class CreatePizzaDto {
 
     @IsNumber()
     rating: number;
+
+    @IsArray()
+    @IsString({ each: true })
+    tags: PizzaTag[];
 
     @ValidateNested()
     @Type(() => Size)
