@@ -1,6 +1,7 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TypegooseModule } from "nestjs-typegoose";
+import { AuthModule } from "./auth/auth.module";
 import { getMongoConfig } from "./configs/mongo.config";
 import { PizzasModule } from "./pizzas/pizzas.module";
 
@@ -13,6 +14,7 @@ import { PizzasModule } from "./pizzas/pizzas.module";
             useFactory: getMongoConfig,
         }),
         PizzasModule,
+        AuthModule
     ],
 })
 export class AppModule {}

@@ -1,13 +1,6 @@
 import { prop } from "@typegoose/typegoose";
 import { Base, TimeStamps } from "@typegoose/typegoose/lib/defaultClasses";
 
-class Size {
-    [key: string]: {
-        thin: number;
-        standard: number;
-    };
-}
-
 export enum PizzaTag {
     All = "all",
     Meat = "meat",
@@ -38,19 +31,19 @@ export class PizzaModel extends TimeStamps {
     @prop({ type: () => [String] })
     tags: PizzaTagType[];
 
-    @prop({ type: () => Size })
+    @prop({ _id: false })
     size26: {
         thin: number;
         standard: number;
     };
 
-    @prop({ type: () => Size })
+    @prop({ _id: false })
     size30: {
         thin: number;
         standard: number;
     };
 
-    @prop({ type: () => Size })
+    @prop({ _id: false })
     size40: {
         thin: number;
         standard: number;

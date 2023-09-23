@@ -9,6 +9,8 @@ import {
     Patch,
     Post,
     Query,
+    UsePipes,
+    ValidationPipe,
 } from "@nestjs/common";
 import { ObjectIdValidationPipe } from "src/pipes/objectIdValidation.pipe";
 import { CreatePizzaDto } from "./dto/create-pizza.dto";
@@ -67,10 +69,9 @@ export class PizzasController {
         };
     }
 
+    @UsePipes(new ValidationPipe())
     @Post("create")
     async create(@Body() dto: CreatePizzaDto) {
-        /* create validation for fields like tags, title, img etc */
-
         const createdPizza = await this.pizzasService.create(dto);
 
         return {
@@ -80,18 +81,20 @@ export class PizzasController {
     }
 
     @Delete(":id")
-    async delete(@Param() id: string) {
+    async delete(@Param("id", ObjectIdValidationPipe) id: string) {
         const deletedPizza = await this.pizzasService.deleteById(id);
 
         if (!deletedPizza) {
             throw new NotFoundException(PIZZA_NOT_FOUND_ERROR);
         }
+
+        return {
+            success: true,
+        };
     }
 
     @Patch(":id")
-    async patch(@Param() id: string, dto: CreatePizzaDto) {
-        /* create validation for fields like tags, title, img etc */
-
+    async patch(@Param("id", ObjectIdValidationPipe) id: string, @Body() dto: CreatePizzaDto) {
         const updatedPizza = await this.pizzasService.updateById(id, dto);
 
         if (!updatedPizza) {
