@@ -20,7 +20,7 @@ import {
     ApiResponse,
     ApiTags,
 } from "@nestjs/swagger";
-import { ObjectIdValidationPipe } from "src/pipes/objectIdValidation.pipe";
+import { ObjectIdValidationPipe } from "../pipes/objectIdValidation.pipe";
 import { PizzaDto } from "./dto/pizza.dto";
 import { PizzaModel, PizzaTag, PizzaTagType } from "./pizza.model";
 import {
