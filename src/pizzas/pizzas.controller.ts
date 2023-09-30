@@ -4,6 +4,7 @@ import {
     Controller,
     Delete,
     Get,
+    HttpStatus,
     NotFoundException,
     Param,
     Patch,
@@ -12,21 +13,59 @@ import {
     UsePipes,
     ValidationPipe,
 } from "@nestjs/common";
+import {
+    ApiBody,
+    ApiProperty,
+    ApiQuery,
+    ApiResponse,
+    ApiTags,
+} from "@nestjs/swagger";
 import { ObjectIdValidationPipe } from "src/pipes/objectIdValidation.pipe";
-import { CreatePizzaDto } from "./dto/create-pizza.dto";
-import { PizzaTag, PizzaTagType } from "./pizza.model";
+import { PizzaDto } from "./dto/pizza.dto";
+import { PizzaModel, PizzaTag, PizzaTagType } from "./pizza.model";
 import {
     PAGE_NUMBER_LIMIT_ERROR,
+    PAGE_NUMBER_NOT_PROVIDED_ERROR,
     PIZZA_NOT_FOUND_ERROR,
+    TAG_NOT_PROVIDED_ERROR,
     TAG_VALIDATION_ERROR,
 } from "./pizzas.constants";
 import { PizzasService } from "./pizzas.service";
 
 @Controller("pizzas")
+@ApiTags("Pizzas")
 export class PizzasController {
     constructor(private readonly pizzasService: PizzasService) {}
 
     @Get()
+    @ApiResponse({
+        status: 200,
+        description:
+            "Get a list of pizzas with optional filters `tag` and `pageNumber`",
+        type: [PizzaDto],
+    })
+    /* @ApiResponse({
+        status: 400,
+        description: TAG_NOT_PROVIDED_ERROR,
+        schema: {
+            example: {
+                message: TAG_NOT_PROVIDED_ERROR,
+                error: "Bad Request",
+                statusCode: 400,
+            },
+        },
+    })
+    @ApiResponse({
+        status: 400,
+        description: TAG_NOT_PROVIDED_ERROR,
+        schema: {
+            example: {
+                message: TAG_NOT_PROVIDED_ERROR,
+                error: "Bad Request",
+                statusCode: 400,
+            },
+        },
+    }) */
     async get(
         @Query("tag") tag: PizzaTag,
         @Query("pageNumber") pageNumber: number,
@@ -39,6 +78,14 @@ export class PizzasController {
             spicy: true,
             calzone: true,
         };
+
+        if (!tag) {
+            throw new BadRequestException(TAG_NOT_PROVIDED_ERROR);
+        }
+
+        if (!pageNumber) {
+            throw new BadRequestException(PAGE_NUMBER_NOT_PROVIDED_ERROR);
+        }
 
         if (!validPizzaTags[tag]) {
             throw new BadRequestException(TAG_VALIDATION_ERROR);
@@ -71,7 +118,7 @@ export class PizzasController {
 
     @UsePipes(new ValidationPipe())
     @Post("create")
-    async create(@Body() dto: CreatePizzaDto) {
+    async create(@Body() dto: PizzaDto) {
         const createdPizza = await this.pizzasService.create(dto);
 
         return {
@@ -94,7 +141,10 @@ export class PizzasController {
     }
 
     @Patch(":id")
-    async patch(@Param("id", ObjectIdValidationPipe) id: string, @Body() dto: CreatePizzaDto) {
+    async patch(
+        @Param("id", ObjectIdValidationPipe) id: string,
+        @Body() dto: PizzaDto,
+    ) {
         const updatedPizza = await this.pizzasService.updateById(id, dto);
 
         if (!updatedPizza) {

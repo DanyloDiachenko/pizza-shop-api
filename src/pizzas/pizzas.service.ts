@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { CreatePizzaDto } from "./dto/create-pizza.dto";
+import { PizzaDto } from "./dto/pizza.dto";
 import { PizzaModel, PizzaTag } from "./pizza.model";
 import { ModelType } from "@typegoose/typegoose/lib/types";
 import { InjectModel } from "nestjs-typegoose";
@@ -26,7 +26,7 @@ export class PizzasService {
         }
     }
 
-    async create(dto: CreatePizzaDto): Promise<PizzaModel> {
+    async create(dto: PizzaDto): Promise<PizzaModel> {
         return this.pizzaModel.create(dto);
     }
 
@@ -38,10 +38,7 @@ export class PizzasService {
         return this.pizzaModel.findByIdAndDelete(id).exec();
     }
 
-    async updateById(
-        id: string,
-        dto: CreatePizzaDto,
-    ): Promise<PizzaModel | null> {
+    async updateById(id: string, dto: PizzaDto): Promise<PizzaModel | null> {
         return this.pizzaModel.findByIdAndUpdate(id, dto, { new: true }).exec();
     }
 }
