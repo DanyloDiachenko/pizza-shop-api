@@ -24,6 +24,7 @@ import { ObjectIdValidationPipe } from "src/pipes/objectIdValidation.pipe";
 import { PizzaDto } from "./dto/pizza.dto";
 import { PizzaModel, PizzaTag, PizzaTagType } from "./pizza.model";
 import {
+    API_RESPONCE_ERROR_MESSAGE,
     PAGE_NUMBER_LIMIT_ERROR,
     PAGE_NUMBER_NOT_PROVIDED_ERROR,
     PIZZA_NOT_FOUND_ERROR,
@@ -44,28 +45,17 @@ export class PizzasController {
             "Get a list of pizzas with optional filters `tag` and `pageNumber`",
         type: [PizzaDto],
     })
-    /* @ApiResponse({
+    @ApiResponse({
         status: 400,
-        description: TAG_NOT_PROVIDED_ERROR,
+        description: "Parameters validation errors",
         schema: {
             example: {
-                message: TAG_NOT_PROVIDED_ERROR,
+                message: "message",
                 error: "Bad Request",
                 statusCode: 400,
             },
         },
     })
-    @ApiResponse({
-        status: 400,
-        description: TAG_NOT_PROVIDED_ERROR,
-        schema: {
-            example: {
-                message: TAG_NOT_PROVIDED_ERROR,
-                error: "Bad Request",
-                statusCode: 400,
-            },
-        },
-    }) */
     async get(
         @Query("tag") tag: PizzaTag,
         @Query("pageNumber") pageNumber: number,
