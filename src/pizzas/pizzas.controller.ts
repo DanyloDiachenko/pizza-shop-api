@@ -24,7 +24,6 @@ import { ObjectIdValidationPipe } from "src/pipes/objectIdValidation.pipe";
 import { PizzaDto } from "./dto/pizza.dto";
 import { PizzaModel, PizzaTag, PizzaTagType } from "./pizza.model";
 import {
-    API_RESPONCE_ERROR_MESSAGE,
     PAGE_NUMBER_LIMIT_ERROR,
     PAGE_NUMBER_NOT_PROVIDED_ERROR,
     PIZZA_NOT_FOUND_ERROR,
