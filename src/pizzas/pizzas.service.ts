@@ -35,16 +35,16 @@ export class PizzasService {
                 sortOptions = { rating: -1 };
                 break;
             case "priceDesc":
-                sortOptions = { price: -1 };
+                sortOptions = { "size26.thin": -1 };
                 break;
             case "priceAsc":
-                sortOptions = { price: 1 };
+                sortOptions = { "size26.thin": 1 };
                 break;
             case "alphabetDesc":
-                sortOptions = { name: -1 };
+                sortOptions = { title: -1 };
                 break;
             case "alphabetAsc":
-                sortOptions = { name: 1 };
+                sortOptions = { title: 1 };
                 break;
             default:
                 break;
