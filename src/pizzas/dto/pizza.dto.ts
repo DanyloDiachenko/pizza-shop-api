@@ -8,9 +8,9 @@ import {
     ValidateNested,
 } from "class-validator";
 import { Type } from "class-transformer";
-import { PizzaTag } from "../pizza.model";
 import { PIZZA_FIELDS_ERROR } from "../pizzas.constants";
 import { ApiProperty, ApiTags } from "@nestjs/swagger";
+import { PizzaTagType } from "src/types/pizzaTag.type";
 
 class Size {
     @ApiProperty()
@@ -41,7 +41,7 @@ export class PizzaDto {
     @IsArray({ message: PIZZA_FIELDS_ERROR("tags", "array") })
     @IsString({ each: true })
     @ApiProperty({ type: [String], description: "Array of pizza tags" })
-    tags: PizzaTag[];
+    tags: PizzaTagType[];
 
     @IsNotEmpty({ message: PIZZA_FIELDS_ERROR("size26", "object") })
     @ValidateNested()

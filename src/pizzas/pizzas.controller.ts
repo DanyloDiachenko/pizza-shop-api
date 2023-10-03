@@ -20,13 +20,18 @@ import {
     ApiResponse,
     ApiTags,
 } from "@nestjs/swagger";
+import { PizzaPageNumberType } from "src/types/pizzaPageNumber.type";
+import { PizzaSortByType } from "src/types/pizzaSortBy.type";
+import { PizzaTagType } from "src/types/pizzaTag.type";
 import { ObjectIdValidationPipe } from "../pipes/objectIdValidation.pipe";
 import { PizzaDto } from "./dto/pizza.dto";
-import { PizzaModel, PizzaTag, PizzaTagType } from "./pizza.model";
+import { PizzaModel } from "./pizza.model";
 import {
     PAGE_NUMBER_LIMIT_ERROR,
     PAGE_NUMBER_NOT_PROVIDED_ERROR,
     PIZZA_NOT_FOUND_ERROR,
+    SORT_BY_NOT_PROVIDED_ERROR,
+    SORT_BY_VALIDATION_ERROR,
     TAG_NOT_PROVIDED_ERROR,
     TAG_VALIDATION_ERROR,
 } from "./pizzas.constants";
@@ -56,8 +61,9 @@ export class PizzasController {
         },
     })
     async get(
-        @Query("tag") tag: PizzaTag,
-        @Query("pageNumber") pageNumber: number,
+        @Query("tag") tag: PizzaTagType,
+        @Query("pageNumber") pageNumber: PizzaPageNumberType,
+        @Query("sortBy") sortBy: PizzaSortByType,
     ) {
         const validPizzaTags: Record<PizzaTagType, boolean> = {
             all: true,
@@ -67,24 +73,37 @@ export class PizzasController {
             spicy: true,
             calzone: true,
         };
+        
+        const validPizzasSortBy: Record<PizzaSortByType, boolean> = {
+            rating: true,
+            priceDesc: true,
+            priceAsc: true,
+            alphabetDesc: true,
+            alphabetAsc: true,
+        };
 
         if (!tag) {
             throw new BadRequestException(TAG_NOT_PROVIDED_ERROR);
+        }
+        if (!validPizzaTags[tag]) {
+            throw new BadRequestException(TAG_VALIDATION_ERROR);
         }
 
         if (!pageNumber) {
             throw new BadRequestException(PAGE_NUMBER_NOT_PROVIDED_ERROR);
         }
-
-        if (!validPizzaTags[tag]) {
-            throw new BadRequestException(TAG_VALIDATION_ERROR);
-        }
-
         if (!pageNumber || pageNumber < 1 || pageNumber > 3) {
             throw new BadRequestException(PAGE_NUMBER_LIMIT_ERROR);
         }
 
-        const pizzas = await this.pizzasService.get(tag, pageNumber);
+        if (!sortBy) {
+            throw new BadRequestException(SORT_BY_NOT_PROVIDED_ERROR);
+        }
+        if (!validPizzasSortBy[sortBy]) {
+            throw new BadRequestException(SORT_BY_VALIDATION_ERROR);
+        }
+
+        const pizzas = await this.pizzasService.get(tag, pageNumber, sortBy);
         return {
             success: true,
             data: pizzas,

@@ -1,0 +1,1 @@
+export type PizzaPageNumberType = 1 | 2 | 3;

@@ -1,21 +1,6 @@
 import { prop } from "@typegoose/typegoose";
 import { Base, TimeStamps } from "@typegoose/typegoose/lib/defaultClasses";
-
-export enum PizzaTag {
-    All = "all",
-    Meat = "meat",
-    Vegetarian = "vegetarian",
-    Grill = "grill",
-    Spicy = "spicy",
-    Calzone = "calzone",
-}
-export type PizzaTagType =
-    | "all"
-    | "meat"
-    | "vegetarian"
-    | "grill"
-    | "spicy"
-    | "calzone";
+import { PizzaTagType } from "src/types/pizzaTag.type";
 
 export interface PizzaModel extends Base {}
 export class PizzaModel extends TimeStamps {

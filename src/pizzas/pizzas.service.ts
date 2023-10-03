@@ -1,8 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import { PizzaDto } from "./dto/pizza.dto";
-import { PizzaModel, PizzaTag } from "./pizza.model";
+import { PizzaModel } from "./pizza.model";
 import { ModelType } from "@typegoose/typegoose/lib/types";
 import { InjectModel } from "nestjs-typegoose";
+import { PizzaTagType } from "src/types/pizzaTag.type";
+import { PizzaPageNumberType } from "src/types/pizzaPageNumber.type";
+import { PizzaSortByType } from "src/types/pizzaSortBy.type";
 
 @Injectable()
 export class PizzasService {
@@ -11,19 +14,50 @@ export class PizzasService {
         private readonly pizzaModel: ModelType<PizzaModel>,
     ) {}
 
-    async get(tag: PizzaTag, pageNumber: number): Promise<PizzaModel[]> {
+    async get(
+        tag: PizzaTagType,
+        pageNumber: PizzaPageNumberType,
+        sortBy: PizzaSortByType,
+    ): Promise<PizzaModel[]> {
         const pageSize = 4;
         const skip = (pageNumber - 1) * pageSize;
 
-        if (tag === "all") {
-            return this.pizzaModel.find().skip(skip).limit(pageSize).exec();
-        } else {
-            return this.pizzaModel
-                .find({ tags: tag })
-                .skip(skip)
-                .limit(pageSize)
-                .exec();
+        let query = {};
+
+        if (tag !== "all") {
+            query = { tags: tag };
         }
+
+        let sortOptions = {};
+
+        switch (sortBy) {
+            case "rating":
+                sortOptions = { rating: -1 };
+                break;
+            case "priceDesc":
+                sortOptions = { price: -1 };
+                break;
+            case "priceAsc":
+                sortOptions = { price: 1 };
+                break;
+            case "alphabetDesc":
+                sortOptions = { name: -1 };
+                break;
+            case "alphabetAsc":
+                sortOptions = { name: 1 };
+                break;
+            default:
+                break;
+        }
+
+        const result = await this.pizzaModel
+            .find(query)
+            .skip(skip)
+            .limit(pageSize)
+            .sort(sortOptions)
+            .exec();
+
+        return result;
     }
 
     async create(dto: PizzaDto): Promise<PizzaModel> {
