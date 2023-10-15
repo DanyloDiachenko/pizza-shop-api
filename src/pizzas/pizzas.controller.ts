@@ -15,11 +15,13 @@ import {
 } from "@nestjs/common";
 import {
     ApiBody,
+    ApiHeader,
     ApiProperty,
     ApiQuery,
     ApiResponse,
     ApiTags,
 } from "@nestjs/swagger";
+import { BAD_REQUEST_ERROR } from "constants/bad-request.constant";
 import { PizzaPageNumberType } from "src/types/pizzaPageNumber.type";
 import { PizzaSortByType } from "src/types/pizzaSortBy.type";
 import { PizzaTagType } from "src/types/pizzaTag.type";
@@ -45,21 +47,10 @@ export class PizzasController {
     @Get()
     @ApiResponse({
         status: 200,
-        description:
-            "Get a list of pizzas with optional filters `tag` and `pageNumber`",
+        description: "Success in getting pizzas",
         type: [PizzaDto],
     })
-    @ApiResponse({
-        status: 400,
-        description: "Parameters validation errors",
-        schema: {
-            example: {
-                message: "message",
-                error: "Bad Request",
-                statusCode: 400,
-            },
-        },
-    })
+    @ApiResponse(BAD_REQUEST_ERROR)
     async get(
         @Query("tag") tag: PizzaTagType,
         @Query("pageNumber") pageNumber: PizzaPageNumberType,
@@ -73,7 +64,7 @@ export class PizzasController {
             spicy: true,
             calzone: true,
         };
-        
+
         const validPizzasSortBy: Record<PizzaSortByType, boolean> = {
             rating: true,
             priceDesc: true,
@@ -111,6 +102,23 @@ export class PizzasController {
     }
 
     @Get(":id")
+    @ApiResponse({
+        status: 200,
+        description: "Success in getting pizza by id",
+        type: PizzaDto,
+    })
+    @ApiResponse(BAD_REQUEST_ERROR)
+    @ApiResponse({
+        status: 404,
+        description: "Pizza with provided `id` was not found",
+        schema: {
+            example: {
+                message: "Pizza with provided `id` wasn`t found.",
+                error: "Bad Request",
+                statusCode: 400,
+            },
+        },
+    })
     async getById(@Param("id", ObjectIdValidationPipe) id: string) {
         const pizza = await this.pizzasService.findById(id);
 
@@ -126,6 +134,11 @@ export class PizzasController {
 
     @UsePipes(new ValidationPipe())
     @Post("create")
+    @ApiResponse(BAD_REQUEST_ERROR)
+    @ApiResponse({
+        status: 200,
+        
+    })
     async create(@Body() dto: PizzaDto) {
         const createdPizza = await this.pizzasService.create(dto);
 
@@ -136,6 +149,24 @@ export class PizzasController {
     }
 
     @Delete(":id")
+    @ApiResponse({
+        status: 200,
+        description: "Pizza with provided `id` was deleted",
+        schema: {
+            example: { success: true },
+        },
+    })
+    @ApiResponse({
+        status: 404,
+        description: "Pizza with provided `id` was not found",
+        schema: {
+            example: {
+                message: "Pizza with provided `id` wasn`t found.",
+                error: "Bad Request",
+                statusCode: 400,
+            },
+        },
+    })
     async delete(@Param("id", ObjectIdValidationPipe) id: string) {
         const deletedPizza = await this.pizzasService.deleteById(id);
 
