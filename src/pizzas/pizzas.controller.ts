@@ -21,7 +21,8 @@ import {
     ApiResponse,
     ApiTags,
 } from "@nestjs/swagger";
-import { BAD_REQUEST_ERROR } from "constants/bad-request.constant";
+import { BAD_REQUEST_ERROR_RESPONSE } from "constants/bad-request.constant";
+import { PIZZA_NOT_FOUND_ERROR_RESPONSE } from "constants/not-found.contant";
 import { PizzaPageNumberType } from "src/types/pizzaPageNumber.type";
 import { PizzaSortByType } from "src/types/pizzaSortBy.type";
 import { PizzaTagType } from "src/types/pizzaTag.type";
@@ -50,7 +51,7 @@ export class PizzasController {
         description: "Success in getting pizzas",
         type: [PizzaDto],
     })
-    @ApiResponse(BAD_REQUEST_ERROR)
+    @ApiResponse(BAD_REQUEST_ERROR_RESPONSE)
     async get(
         @Query("tag") tag: PizzaTagType,
         @Query("pageNumber") pageNumber: PizzaPageNumberType,
@@ -107,18 +108,8 @@ export class PizzasController {
         description: "Success in getting pizza by id",
         type: PizzaDto,
     })
-    @ApiResponse(BAD_REQUEST_ERROR)
-    @ApiResponse({
-        status: 404,
-        description: "Pizza with provided `id` was not found",
-        schema: {
-            example: {
-                message: "Pizza with provided `id` wasn`t found.",
-                error: "Bad Request",
-                statusCode: 400,
-            },
-        },
-    })
+    @ApiResponse(BAD_REQUEST_ERROR_RESPONSE)
+    @ApiResponse(PIZZA_NOT_FOUND_ERROR_RESPONSE)
     async getById(@Param("id", ObjectIdValidationPipe) id: string) {
         const pizza = await this.pizzasService.findById(id);
 
@@ -134,10 +125,12 @@ export class PizzasController {
 
     @UsePipes(new ValidationPipe())
     @Post("create")
-    @ApiResponse(BAD_REQUEST_ERROR)
+    @ApiResponse(BAD_REQUEST_ERROR_RESPONSE)
+    @ApiResponse(PIZZA_NOT_FOUND_ERROR_RESPONSE)
     @ApiResponse({
         status: 200,
-        
+        description: "Pizza with provided id was created successfuly",
+        type: PizzaDto,
     })
     async create(@Body() dto: PizzaDto) {
         const createdPizza = await this.pizzasService.create(dto);
@@ -156,17 +149,7 @@ export class PizzasController {
             example: { success: true },
         },
     })
-    @ApiResponse({
-        status: 404,
-        description: "Pizza with provided `id` was not found",
-        schema: {
-            example: {
-                message: "Pizza with provided `id` wasn`t found.",
-                error: "Bad Request",
-                statusCode: 400,
-            },
-        },
-    })
+    @ApiResponse(PIZZA_NOT_FOUND_ERROR_RESPONSE)
     async delete(@Param("id", ObjectIdValidationPipe) id: string) {
         const deletedPizza = await this.pizzasService.deleteById(id);
 
@@ -180,6 +163,15 @@ export class PizzasController {
     }
 
     @Patch(":id")
+    @ApiResponse(PIZZA_NOT_FOUND_ERROR_RESPONSE)
+    @ApiResponse(BAD_REQUEST_ERROR_RESPONSE)
+    @ApiResponse({
+        status: 200,
+        description: "Pizza with provided id was updated successfuly",
+        schema: {
+            example: PizzaDto,
+        },
+    })
     async patch(
         @Param("id", ObjectIdValidationPipe) id: string,
         @Body() dto: PizzaDto,
