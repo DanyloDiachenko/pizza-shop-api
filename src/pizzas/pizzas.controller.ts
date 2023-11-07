@@ -21,8 +21,8 @@ import {
     ApiResponse,
     ApiTags,
 } from "@nestjs/swagger";
-import { BAD_REQUEST_ERROR_RESPONSE } from "constants/bad-request.constant";
-import { PIZZA_NOT_FOUND_ERROR_RESPONSE } from "constants/not-found.contant";
+import { BAD_REQUEST_ERROR_RESPONSE } from "../../constants/bad-request.constant";
+import { PIZZA_NOT_FOUND_ERROR_RESPONSE } from "../../constants/not-found.contant";
 import { PizzaPageNumberType } from "src/types/pizzaPageNumber.type";
 import { PizzaSortByType } from "src/types/pizzaSortBy.type";
 import { PizzaTagType } from "src/types/pizzaTag.type";
