@@ -15,10 +15,12 @@ import { PizzaTagType } from "src/types/pizzaTag.type";
 class Size {
     @ApiProperty()
     @IsNumber()
+    @ApiProperty({ description: "Price of pizza with thin dough" })
     thin: number;
 
     @ApiProperty()
     @IsNumber()
+    @ApiProperty({ description: "Price of pizza with standard dough" })
     standard: number;
 }
 

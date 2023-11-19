@@ -1,7 +1,7 @@
 export const PAGE_NUMBER_LIMIT_ERROR =
-    "Invalid `pageNumber`. It must be between 0(no includes) and 4(no includes).";
+    "Invalid `page`. It must be between 0(no includes) and 4(no includes).";
 export const PAGE_NUMBER_NOT_PROVIDED_ERROR =
-    "Query parametr `pageNumber` wasn`t provided.";
+    "Query parametr `page` wasn`t provided.";
 
 export const TAG_NOT_PROVIDED_ERROR = "Query parametr `tag` wasn`t provided.";
 export const TAG_VALIDATION_ERROR =

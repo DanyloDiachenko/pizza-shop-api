@@ -6,6 +6,7 @@ import { InjectModel } from "nestjs-typegoose";
 import { PizzaTagType } from "src/types/pizzaTag.type";
 import { PizzaPageNumberType } from "src/types/pizzaPageNumber.type";
 import { PizzaSortByType } from "src/types/pizzaSortBy.type";
+import { QueryOptions } from "mongoose";
 
 @Injectable()
 export class PizzasService {
@@ -16,16 +17,21 @@ export class PizzasService {
 
     async get(
         tag: PizzaTagType,
-        pageNumber: PizzaPageNumberType,
+        page: PizzaPageNumberType,
         sortBy: PizzaSortByType,
+        search?: string,
     ): Promise<PizzaModel[]> {
         const pageSize = 4;
-        const skip = (pageNumber - 1) * pageSize;
+        const skip = (page - 1) * pageSize;
 
-        let query = {};
+        let query: QueryOptions = {};
 
         if (tag !== "all") {
             query = { tags: tag };
+        }
+
+        if (search && search.trim() !== "") {
+            query["title"] = { $regex: new RegExp(search, "i") };
         }
 
         let sortOptions = {};
