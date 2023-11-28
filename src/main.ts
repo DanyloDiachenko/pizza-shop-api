@@ -7,16 +7,19 @@ async function bootstrap() {
     app.enableCors({
         origin: true,
     });
-    app.setGlobalPrefix("api");
 
-    const config = new DocumentBuilder()
-        .setTitle("Pizza shop API")
-        .setDescription("The pizza shop API description")
-        .setVersion("1.0")
+    app.setGlobalPrefix('api');
+
+    const options = new DocumentBuilder()
+        .setTitle('Your title')
+        .setDescription('Your description')
+        .setVersion('1.0')
         .build();
+    const document = SwaggerModule.createDocument(app, options);
 
-    const document = SwaggerModule.createDocument(app, config);
-    SwaggerModule.setup("docs", app, document);
+    SwaggerModule.setup('api', app, document, {
+        customCssUrl: 'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui.min.css',
+    });
 
     await app.listen(3000);
 }
